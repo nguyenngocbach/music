@@ -30,10 +30,18 @@ public class AllSongAdapter extends RecyclerView.Adapter<AllSongAdapter.ViewHold
         this.listener = listener;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (mSongs.get(position).isPlay()==true) return 1;
+        return 0;
+    }
 
     @NonNull
     @Override
     public AllSongAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType==1){
+            View view= LayoutInflater.from(mContext).inflate(R.layout.song_line_play,parent,false);
+        }
         View view= LayoutInflater.from(mContext).inflate(R.layout.song_line,parent,false);
         return new ViewHolder(view);
     }
@@ -46,14 +54,14 @@ public class AllSongAdapter extends RecyclerView.Adapter<AllSongAdapter.ViewHold
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int INDEXX= MainActivity.getINDEX();
-                if (INDEXX==position) return;
-                mSongs.get(position).setPlay(true);
-                if (INDEXX!=-1)
-                    mSongs.get(INDEXX).setPlay(false);
-                INDEXX= position;
+//                int INDEXX= MainActivity.getINDEX();
+//                if (INDEXX==position) return;
+//                mSongs.get(position).setPlay(true);
+//                if (INDEXX!=-1)
+//                    mSongs.get(INDEXX).setPlay(false);
+//                INDEXX= position;
                 listener.selectMusic(mSongs.get(position));
-                MainActivity.saveInDex(position);
+                //MainActivity.saveInDex(position);
                 notifyDataSetChanged();
             }
         });

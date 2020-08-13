@@ -7,8 +7,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bkav.appmusic.fragment.AllSongFragment;
@@ -25,6 +27,10 @@ public class MainActivity extends AppCompatActivity  implements SongListener , M
     private FrameLayout frameLayout;
     private ImageView imgPlay, imgImage;
     private TextView txtTitle, txtAuthor;
+    private LinearLayout layout;
+
+
+    private FragmentManager manager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +53,23 @@ public class MainActivity extends AppCompatActivity  implements SongListener , M
         txtAuthor= findViewById(R.id.nameAirsts);
 
         AllSongFragment songFragment= new AllSongFragment();
-        FragmentManager manager= getSupportFragmentManager();
-        FragmentTransaction ft= manager.beginTransaction();
-        ft.replace(R.id.AllSongsFragment,songFragment);
+        manager= getSupportFragmentManager();
+        final FragmentTransaction ft= manager.beginTransaction();
+        ft.add(R.id.AllSongsFragment,songFragment);
         ft.commit();
+
+        layout= findViewById(R.id.linearLayout);
+
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft= manager.beginTransaction();
+                ft.add(R.id.frame_main,new MediaPlaybackFragment());
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
     }
 
     public static void saveInDex(int index){
