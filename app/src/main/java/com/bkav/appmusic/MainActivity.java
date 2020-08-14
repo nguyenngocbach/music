@@ -18,10 +18,10 @@ import com.bkav.appmusic.fragment.MediaPlaybackFragment;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
 
-public class MainActivity extends AppCompatActivity  implements SongListener , MediaPlaybackFragment.MediaPlayFragmentListenner {
-    public static int INDEX=-1;
-    public String PREFERENCES="com.bkav.appmusic";
-    public static SharedPreferences sharedPreferences;
+public class  MainActivity extends AppCompatActivity  implements MediaPlaybackFragment.MediaPlayFragmentListenner {
+//    public static int INDEX=-1;
+//    public String PREFERENCES="com.bkav.appmusic";
+//    public static SharedPreferences sharedPreferences;
 
     private Toolbar toolbar;
     private FrameLayout frameLayout;
@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity  implements SongListener , M
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPreferences= getSharedPreferences(PREFERENCES,MODE_PRIVATE);
+        //sharedPreferences= getSharedPreferences(PREFERENCES,MODE_PRIVATE);
         if (savedInstanceState!=null){
-            INDEX = sharedPreferences.getInt("count", -1);
+            //INDEX = sharedPreferences.getInt("count", -1);
         }
 
         init();
@@ -72,22 +72,22 @@ public class MainActivity extends AppCompatActivity  implements SongListener , M
 
     }
 
-    public static void saveInDex(int index){
-        SharedPreferences.Editor editor= sharedPreferences.edit();
-        editor.putInt("NUMBERINDEX",index);
-        editor.apply();
-    }
+//    public static void saveInDex(int index){
+//        SharedPreferences.Editor editor= sharedPreferences.edit();
+//        editor.putInt("NUMBERINDEX",index);
+//        editor.apply();
+//    }
+//
+//    public static int getINDEX(){
+//        INDEX = sharedPreferences.getInt("NUMBERINDEX", -1);
+//        return INDEX;
+//    }
 
-    public static int getINDEX(){
-        INDEX = sharedPreferences.getInt("NUMBERINDEX", -1);
-        return INDEX;
-    }
-
-    @Override
-    public void selectMusic(Song song) {
-        txtTitle.setText(song.getTitle());
-        txtAuthor.setText(song.getAuthor());
-    }
+//    @Override
+//    public void selectMusic(Song song) {
+//        txtTitle.setText(song.getTitle());
+//        txtAuthor.setText(song.getAuthor());
+//    }
 
 
 

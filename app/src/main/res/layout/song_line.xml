@@ -42,7 +42,6 @@
             android:layout_height="wrap_content"
             android:text="Hedddddo"
             android:textSize="18dp"
-            android:textStyle="bold"
             android:maxLines="1"
             android:layout_marginBottom="4dp"
             />

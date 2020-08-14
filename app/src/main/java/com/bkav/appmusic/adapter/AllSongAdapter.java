@@ -39,10 +39,13 @@ public class AllSongAdapter extends RecyclerView.Adapter<AllSongAdapter.ViewHold
     @NonNull
     @Override
     public AllSongAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view=null;
         if (viewType==1){
-            View view= LayoutInflater.from(mContext).inflate(R.layout.song_line_play,parent,false);
+             view= LayoutInflater.from(mContext).inflate(R.layout.song_line_play,parent,false);
         }
-        View view= LayoutInflater.from(mContext).inflate(R.layout.song_line,parent,false);
+        else {
+             view= LayoutInflater.from(mContext).inflate(R.layout.song_line,parent,false);
+        }
         return new ViewHolder(view);
     }
 
@@ -92,7 +95,6 @@ public class AllSongAdapter extends RecyclerView.Adapter<AllSongAdapter.ViewHold
             if (song.isPlay()){
                 txtStt.setVisibility(View.INVISIBLE);
                 iconPlayMusic.setVisibility(View.VISIBLE);
-                txtTitle.setTextSize(1.1f);
             }
         }
     }

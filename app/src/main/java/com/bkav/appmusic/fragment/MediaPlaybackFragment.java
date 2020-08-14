@@ -72,9 +72,13 @@ public class MediaPlaybackFragment extends Fragment {
 
     public interface MediaPlayFragmentListenner{
         void onLike();
+
         void onPrevious();
+
         void onPlay();
+
         void onNext();
+
         void onDisLike();
     }
 }

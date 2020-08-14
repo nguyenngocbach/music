@@ -43,7 +43,7 @@ public class AllSongFragment extends Fragment {
     private void addData() {
         mSongs=  new ArrayList<>();
         mSongs.add(new Song("Hello","abcdef",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
+        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,true));
         mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
         mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
         mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
