@@ -7,8 +7,22 @@
     android:id="@+id/frame_main"
     tools:context=".MainActivity">
     <fragment
+        android:id="@+id/toolbar_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.bkav.appmusic.fragment.ToolbarFragment"
+        />
+    <FrameLayout
+        android:id="@+id/allSongFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="70dp"
+        />
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/musicPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         />
 </FrameLayout>

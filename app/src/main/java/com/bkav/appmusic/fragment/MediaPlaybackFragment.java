@@ -46,6 +46,7 @@ public class MediaPlaybackFragment extends Fragment {
         Bundle bundle= new Bundle();
         bundle.putSerializable(KEY_FRAGGMENT,song);
         fragment.setArguments(bundle);
+
         return fragment;
     }
 
@@ -68,6 +69,14 @@ public class MediaPlaybackFragment extends Fragment {
         txtTotalTime= view.findViewById(R.id.txt_totalTime);
         seekBar= view.findViewById(R.id.seebar_ok);
         return view;
+    }
+
+
+    public void setDataMusic(Song s){
+        txtAuthor.setText(s.getAuthor());
+        txtTitel.setText(s.getTitle());
+        //imgMusic.setBackgroundResource();
+        //imgAvatar.setBackgroundResource();
     }
 
     public interface MediaPlayFragmentListenner{
