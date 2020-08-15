@@ -18,16 +18,16 @@ import com.bkav.appmusic.fragment.MediaPlaybackFragment;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
 
-public class  MainActivity extends AppCompatActivity  implements MediaPlaybackFragment.MediaPlayFragmentListenner {
+public class  MainActivity extends AppCompatActivity  implements MediaPlaybackFragment.MediaPlayFragmentListenner , SongListener {
 //    public static int INDEX=-1;
 //    public String PREFERENCES="com.bkav.appmusic";
 //    public static SharedPreferences sharedPreferences;
 
-    private Toolbar toolbar;
-    private FrameLayout frameLayout;
-    private ImageView imgPlay, imgImage;
-    private TextView txtTitle, txtAuthor;
-    private LinearLayout layout;
+//    private Toolbar toolbar;
+//    private FrameLayout frameLayout;
+//    private ImageView imgPlay, imgImage;
+//    private TextView txtTitle, txtAuthor;
+//    private LinearLayout layout;
 
 
     private FragmentManager manager;
@@ -44,31 +44,31 @@ public class  MainActivity extends AppCompatActivity  implements MediaPlaybackFr
     }
 
     private void init() {
-        toolbar= findViewById(R.id.toolbar);
+       /* toolbar= findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         frameLayout= findViewById(R.id.AllSongsFragment);
         imgImage=findViewById(R.id.avatar);
         imgPlay=findViewById(R.id.icon_play_music);
         txtTitle= findViewById(R.id.nameMusic);
         txtAuthor= findViewById(R.id.nameAirsts);
+*/
+//        AllSongFragment songFragment= new AllSongFragment();
+//        manager= getSupportFragmentManager();
+//        final FragmentTransaction ft= manager.beginTransaction();
+//        ft.add(R.id.AllSongsFragment,songFragment);
+//        ft.commit();
 
-        AllSongFragment songFragment= new AllSongFragment();
-        manager= getSupportFragmentManager();
-        final FragmentTransaction ft= manager.beginTransaction();
-        ft.add(R.id.AllSongsFragment,songFragment);
-        ft.commit();
-
-        layout= findViewById(R.id.linearLayout);
-
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction ft= manager.beginTransaction();
-                ft.add(R.id.frame_main,new MediaPlaybackFragment());
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
+//        layout= findViewById(R.id.linearLayout);
+//
+//        layout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FragmentTransaction ft= manager.beginTransaction();
+//                ft.add(R.id.frame_main,new MediaPlaybackFragment());
+//                ft.addToBackStack(null);
+//                ft.commit();
+//            }
+//        });
 
     }
 
@@ -114,5 +114,13 @@ public class  MainActivity extends AppCompatActivity  implements MediaPlaybackFr
     @Override
     public void onDisLike() {
 
+    }
+
+    @Override
+    public void selectMusic(Song song, int position) {
+//        txtTitle.setText(song.getTitle());
+//        txtAuthor.setText(song.getAuthor());
+        AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.AllSongsFragment);
+        mf.setPosition(position);
     }
 }

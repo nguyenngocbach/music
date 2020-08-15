@@ -63,9 +63,16 @@ public class AllSongAdapter extends RecyclerView.Adapter<AllSongAdapter.ViewHold
 //                if (INDEXX!=-1)
 //                    mSongs.get(INDEXX).setPlay(false);
 //                INDEXX= position;
-                listener.selectMusic(mSongs.get(position));
+
+//                for (int i=0;i<mSongs.size();i++){
+//                    if(i==position){
+//                        mSongs.get(position).setPlay(true);
+//                    }
+//                    mSongs.get(position).setPlay(false);
+//                }
+                listener.selectMusic(mSongs.get(position), position);
                 //MainActivity.saveInDex(position);
-                notifyDataSetChanged();
+                //notifyDataSetChanged();
             }
         });
     }

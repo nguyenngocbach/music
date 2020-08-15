@@ -54,4 +54,18 @@ public class AllSongFragment extends Fragment {
         mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
 
     }
+
+    public List<Song> getAllSong(){
+        return mSongs;
+    }
+
+    public void setPosition(int position){
+
+        for (int i=0;i<mSongs.size();i++){
+            mSongs.get(i).setPlay(false);
+                }
+        mSongs.get(position).setPlay(true);
+
+        adapter.notifyDataSetChanged();
+    }
 }
