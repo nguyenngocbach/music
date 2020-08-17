@@ -1,10 +1,14 @@
 package com.bkav.appmusic.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +31,23 @@ public class AllSongFragment extends Fragment {
     private List<Song> mSongs;
     private AllSongAdapter adapter;
 
+    private ImageView imgPlay, imgImage;
+    private TextView txtTitle, txtAuthor;
+    private LinearLayout layout;
+    private ShowMeDiaPlayListener listener;
+
+    private Song cerrentSong=null;
+    private int index=0;
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof MainActivity){
+            listener= (ShowMeDiaPlayListener) context;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,14 +58,50 @@ public class AllSongFragment extends Fragment {
         addData();
         adapter= new AllSongAdapter(getContext(),mSongs, (MainActivity) getActivity());
         recyclerView.setAdapter(adapter);
+
+        //
+//        for(int i=0;i<mSongs.size();i++){
+//            if(mSongs.get(i).isPlay()){
+//                cerrentSong=mSongs.get(i);
+//            }
+//        }
+
+        imgImage=view.findViewById(R.id.avatar);
+        imgPlay=view.findViewById(R.id.icon_play_music);
+        txtTitle= view.findViewById(R.id.nameMusic);
+        txtAuthor= view.findViewById(R.id.nameAirsts);
+        layout= view.findViewById(R.id.linearLayout);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.show();
+            }
+        });
+
         return view;
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        for(int i=0;i<mSongs.size();i++){
+            if(mSongs.get(i).isPlay()){
+                cerrentSong=mSongs.get(i);
+                index=i;
+            }
+        }
+
+//        if (!MainActivity.isVertical){
+//            layout.setVisibility(View.GONE);
+//        }
+    }
+
 
     private void addData() {
         mSongs=  new ArrayList<>();
         mSongs.add(new Song("Hello","abcdef",1111,false));
         mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,true));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
+        mSongs.add(new Song("Yêu Em","Sơn tùng - MTP",1111,false));
         mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
         mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
         mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
@@ -65,7 +122,48 @@ public class AllSongFragment extends Fragment {
             mSongs.get(i).setPlay(false);
                 }
         mSongs.get(position).setPlay(true);
-
+        txtTitle.setText(mSongs.get(position).getTitle());
+        txtAuthor.setText(mSongs.get(position).getAuthor());
         adapter.notifyDataSetChanged();
+    }
+
+    public Song getCerrentSong() {
+        return cerrentSong;
+    }
+
+    public interface ShowMeDiaPlayListener{
+        void show();
+    }
+
+    public void onPrevious(){
+        mSongs.get(index).setPlay(false);
+        if (index==0){
+            index=mSongs.size();
+        }
+        else index--;
+        mSongs.get(index).setPlay(true);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void onLike(){
+        //todo something
+    }
+
+    public void onPlay(){
+        //todo sonething
+    }
+
+    public void onNext(){
+        mSongs.get(index).setPlay(false);
+        if (index==mSongs.size()){
+            index=0;
+        }
+        else index++;
+        mSongs.get(index).setPlay(true);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void onDisLike(){
+        //todo something
     }
 }

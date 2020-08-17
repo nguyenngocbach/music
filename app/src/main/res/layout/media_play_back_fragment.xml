@@ -7,14 +7,41 @@
     android:layout_height="match_parent"
     android:background="@color/orange"
     >
-    <ImageView
-        android:id="@+id/img_music"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/ngoc_em_em"
-        android:scaleType="centerCrop"
-        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/img_music"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ngoc_em_em"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/icon_repeat"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_repeat_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/img_music"
+            android:layout_marginBottom="110dp"
+            android:layout_marginStart="20dp"
+            />
+        <ImageView
+            android:id="@+id/icon_shuffle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_shuffle_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/img_music"
+            android:layout_marginBottom="110dp"
+            android:layout_marginEnd="20dp"
+
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="75dp"
@@ -75,7 +102,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="95dp"
+        android:layout_height="90dp"
         android:layout_gravity="bottom"
         android:paddingBottom="10dp"
         android:background="#80FFFFFF">
@@ -93,7 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textSize="12dp"
+            android:textSize="10sp"
             android:text="00:00"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/seebar_ok" />
@@ -102,7 +129,7 @@
             android:id="@+id/txt_totalTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12dp"
+            android:textSize="10sp"
             android:layout_marginEnd="10dp"
             android:text="00:00"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +142,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iconPrevious"
             app:layout_constraintHorizontal_bias="0.5"
-            android:padding="5dp"
+            android:padding="7dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_startTime"
             app:srcCompat="@drawable/ic_baseline_thumb_up_24" />
@@ -159,7 +186,7 @@
             android:layout_height="@dimen/size_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:padding="5dp"
+            android:padding="7dp"
             app:layout_constraintStart_toEndOf="@+id/iconNext"
             app:layout_constraintTop_toBottomOf="@+id/txt_totalTime"
             app:srcCompat="@drawable/ic_baseline_thumb_down" />

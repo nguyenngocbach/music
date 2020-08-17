@@ -17,11 +17,11 @@ import com.bkav.appmusic.MainActivity;
 import com.bkav.appmusic.R;
 import com.bkav.appmusic.model.Song;
 
-public class MediaPlaybackFragment extends Fragment {
+public class MediaPlaybackFragment extends Fragment implements View.OnClickListener{
     public static final String KEY_FRAGGMENT= "com.bkav.appmusic.fragment.MediaPlaybackFragment";
 
     private ImageView imgMusic,imgAvatar;
-    private ImageView iconLike, iconPrevious,iconPlay, iconNext,iconDislike,iconMore,iconListMusic;
+    private ImageView iconLike, iconPrevious,iconPlay, iconNext,iconDislike,iconMore,iconListMusic, iconRePeat, iconShuffle;
     private TextView txtTime, txtTotalTime,txtTitel,txtAuthor;
     private SeekBar seekBar;
 
@@ -63,12 +63,28 @@ public class MediaPlaybackFragment extends Fragment {
         iconPlay= view.findViewById(R.id.iconPlay);
         iconNext= view.findViewById(R.id.iconNext);
         iconDislike= view.findViewById(R.id.iconDislike);
+        iconRePeat= view.findViewById(R.id.icon_repeat);
+        iconShuffle= view.findViewById(R.id.icon_shuffle);
         txtAuthor= view.findViewById(R.id.txtAuthor);
         txtTitel= view.findViewById(R.id.txtTitle);
         txtTime= view.findViewById(R.id.txt_startTime);
         txtTotalTime= view.findViewById(R.id.txt_totalTime);
         seekBar= view.findViewById(R.id.seebar_ok);
+
+        listenner();
         return view;
+    }
+
+    private void listenner() {
+        iconMore.setOnClickListener(this);
+        iconListMusic.setOnClickListener(this);
+        iconLike.setOnClickListener(this);
+        iconPrevious.setOnClickListener(this);
+        iconPlay.setOnClickListener(this);
+        iconNext.setOnClickListener(this);
+        iconDislike.setOnClickListener(this);
+        iconRePeat.setOnClickListener(this);
+        iconShuffle.setOnClickListener(this);
     }
 
 
@@ -77,6 +93,38 @@ public class MediaPlaybackFragment extends Fragment {
         txtTitel.setText(s.getTitle());
         //imgMusic.setBackgroundResource();
         //imgAvatar.setBackgroundResource();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.icon_more:
+                break;
+            case R.id.icon_queue:
+                break;
+            case R.id.iconLike:
+                listenner.onLike();
+                break;
+            case R.id.iconPrevious:
+                listenner.onPrevious();
+                break;
+            case R.id.iconPlay:
+                listenner.onPlay();
+                break;
+            case R.id.iconNext:
+                listenner.onNext();
+                break;
+            case R.id.iconDislike:
+                listenner.onDisLike();
+                break;
+            case R.id.icon_repeat:
+                listenner.rePeat();
+                break;
+            case R.id.icon_shuffle:
+                listenner.shuffle();
+                getActivity().onBackPressed();
+                break;
+        }
     }
 
     public interface MediaPlayFragmentListenner{
@@ -89,5 +137,9 @@ public class MediaPlaybackFragment extends Fragment {
         void onNext();
 
         void onDisLike();
+
+        void rePeat();
+
+        void shuffle();
     }
 }

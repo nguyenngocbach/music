@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ import com.bkav.appmusic.fragment.ToolbarFragment;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
 
-public class  MainActivity extends AppCompatActivity  implements  SongListener , MediaPlaybackFragment.MediaPlayFragmentListenner, ToolbarFragment.ShowMeDiaPlayListener {
+public class  MainActivity extends AppCompatActivity  implements  SongListener , MediaPlaybackFragment.MediaPlayFragmentListenner, AllSongFragment.ShowMeDiaPlayListener {
 //    public static int INDEX=-1;
 //    public String PREFERENCES="com.bkav.appmusic";
 //    public static SharedPreferences sharedPreferences;
@@ -30,6 +31,7 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 //    private TextView txtTitle, txtAuthor;
 //    private LinearLayout layout;
     private FragmentManager fragmentManager;
+    private boolean isVertical= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +42,29 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 //            //INDEX = sharedPreferences.getInt("count", -1);
 //        }
 
-        fragmentManager= getSupportFragmentManager();
-        FragmentTransaction ft= fragmentManager.beginTransaction();
-        ft.add(R.id.allSongFragment,new AllSongFragment());
-        ft.commit();
+        if(findViewById(R.id.vertical_Screen) != null )
+            isVertical=true;
 
-        FragmentTransaction fplay= fragmentManager.beginTransaction();
-        fplay.add(R.id.musicPlayer,new MediaPlaybackFragment());
-        fplay.commit();
+        if(isVertical) {
 
+            fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.add(R.id.allSongFragment, new AllSongFragment());
+            ft.commit();
+
+        }
+
+        else{
+
+            fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.add(R.id.allSongFragment, new AllSongFragment());
+            ft.commit();
+
+            FragmentTransaction fplay = fragmentManager.beginTransaction();
+            fplay.add(R.id.musicPlayer, new MediaPlaybackFragment());
+            fplay.commit();
+        }
 
         //init();
     }
@@ -97,26 +113,44 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 
     @Override
     public void onLike() {
+        // todo songthing
+        AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+        ft.onLike();
 
     }
 
     @Override
     public void onPrevious() {
-
+        AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+        ft.onPrevious();
     }
 
     @Override
     public void onPlay() {
-
+        AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+        ft.onPlay();
     }
 
     @Override
     public void onNext() {
-
+        AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+        ft.onNext();
     }
 
     @Override
     public void onDisLike() {
+        AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+        ft.onDisLike();
+    }
+
+    @Override
+    public void rePeat() {
+//        AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+//        ft.onR();
+    }
+
+    @Override
+    public void shuffle() {
 
     }
 
@@ -127,20 +161,24 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
         AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
         mf.setPosition(position);
 
-        MediaPlaybackFragment mPlay= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
-        mPlay.setDataMusic(song);
+        if (!isVertical){
+            MediaPlaybackFragment mPlay= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
+            mPlay.setDataMusic(song);
+        }
+       // MediaPlaybackFragment mPlay= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
     }
 
     @Override
     public void show() {
-        MediaPlaybackFragment mediaPlaybackFragment= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
-        mediaPlaybackFragment.setUserVisibleHint(!mediaPlaybackFragment.isVisible());
+        FragmentTransaction fplay = fragmentManager.beginTransaction();
+        fplay.add(R.id.allSongFragment, new MediaPlaybackFragment());
+        fplay.addToBackStack(null);
+        fplay.commit();
     }
 
     @Override
     public void onBackPressed() {
-        MediaPlaybackFragment mediaPlaybackFragment= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
-        mediaPlaybackFragment.setUserVisibleHint(!mediaPlaybackFragment.isVisible());
+
         super.onBackPressed();
     }
 }

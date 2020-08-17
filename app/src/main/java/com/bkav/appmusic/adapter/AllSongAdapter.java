@@ -24,6 +24,7 @@ public class AllSongAdapter extends RecyclerView.Adapter<AllSongAdapter.ViewHold
     private List<Song> mSongs;
     private SongListener listener;
 
+
     public AllSongAdapter(Context mContext, List<Song> mSongs, SongListener listener) {
         this.mContext = mContext;
         this.mSongs = mSongs;
