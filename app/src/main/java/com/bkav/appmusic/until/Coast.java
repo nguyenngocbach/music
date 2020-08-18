@@ -11,7 +11,7 @@ public class Coast {
    public static Bundle getSongFormat(Song song){
        Bundle bundle= new Bundle();
        bundle.putString(TITLE_SONG,song.getTitle());
-       bundle.putString(AUTHOR_SONG,song.getTitle());
+       bundle.putString(AUTHOR_SONG,song.getAuthor());
        return bundle;
    }
 }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bkav.appmusic.MainActivity;
 import com.bkav.appmusic.R;
+import com.bkav.appmusic.fragment.AllSongFragment;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
 
@@ -72,6 +73,7 @@ public class AllSongAdapter extends RecyclerView.Adapter<AllSongAdapter.ViewHold
 //                    mSongs.get(position).setPlay(false);
 //                }
                 listener.selectMusic(mSongs.get(position), position);
+                AllSongFragment.index=position;
                 //MainActivity.saveInDex(position);
                 //notifyDataSetChanged();
             }

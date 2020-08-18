@@ -2,6 +2,7 @@ package com.bkav.appmusic.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.bkav.appmusic.MainActivity;
 import com.bkav.appmusic.R;
 import com.bkav.appmusic.model.Song;
+import com.bkav.appmusic.until.Coast;
 
 public class MediaPlaybackFragment extends Fragment implements View.OnClickListener{
     public static final String KEY_FRAGGMENT= "com.bkav.appmusic.fragment.MediaPlaybackFragment";
@@ -27,11 +29,14 @@ public class MediaPlaybackFragment extends Fragment implements View.OnClickListe
 
     private MediaPlayFragmentListenner listenner;
 
+    private MainActivity mainActivity;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof MainActivity){
             listenner= (MediaPlayFragmentListenner) context;
+            mainActivity= (MainActivity) context;
         }
         else {
             throw new ClassCastException("onAttach Methods have problem !");
@@ -44,9 +49,8 @@ public class MediaPlaybackFragment extends Fragment implements View.OnClickListe
     public static MediaPlaybackFragment getINSTANCE(Song song){
         MediaPlaybackFragment fragment= new MediaPlaybackFragment();
         Bundle bundle= new Bundle();
-        bundle.putSerializable(KEY_FRAGGMENT,song);
-        fragment.setArguments(bundle);
-
+        //bundle.putSerializable(KEY_FRAGGMENT,song);
+        fragment.setArguments(Coast.getSongFormat(song));
         return fragment;
     }
 
@@ -70,10 +74,16 @@ public class MediaPlaybackFragment extends Fragment implements View.OnClickListe
         txtTime= view.findViewById(R.id.txt_startTime);
         txtTotalTime= view.findViewById(R.id.txt_totalTime);
         seekBar= view.findViewById(R.id.seebar_ok);
-
         listenner();
+
+        if (mainActivity.isVertical){
+
+            setTitle(getArguments());
+        }
+
         return view;
     }
+
 
     private void listenner() {
         iconMore.setOnClickListener(this);
@@ -85,6 +95,13 @@ public class MediaPlaybackFragment extends Fragment implements View.OnClickListe
         iconDislike.setOnClickListener(this);
         iconRePeat.setOnClickListener(this);
         iconShuffle.setOnClickListener(this);
+    }
+
+    public void setTitle(Bundle bundle){
+        String title= bundle.getString(Coast.TITLE_SONG,"1");
+        String author= bundle.getString(Coast.AUTHOR_SONG,"1");
+        txtAuthor.setText(author);
+        txtTitel.setText(title);
     }
 
 
@@ -125,6 +142,16 @@ public class MediaPlaybackFragment extends Fragment implements View.OnClickListe
                 getActivity().onBackPressed();
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (!mainActivity.isVertical) {
+            MediaPlaybackFragment mediaPlaybackFragment= (MediaPlaybackFragment) getChildFragmentManager().findFragmentById(R.id.musicPlayer);
+           if (mediaPlaybackFragment.isRemoving()) mainActivity.onRemoveFragmetMusic();
+        }
+
+        super.onDestroy();
     }
 
     public interface MediaPlayFragmentListenner{

@@ -37,14 +37,16 @@ public class AllSongFragment extends Fragment {
     private ShowMeDiaPlayListener listener;
 
     private Song cerrentSong=null;
-    private int index=0;
+    public static int index=0;
 
+    MainActivity mainActivity;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if(context instanceof MainActivity){
             listener= (ShowMeDiaPlayListener) context;
+            mainActivity= (MainActivity) context;
         }
     }
 
@@ -74,10 +76,13 @@ public class AllSongFragment extends Fragment {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.show();
+                listener.show(cerrentSong);
             }
         });
 
+        if (!mainActivity.isVertical){
+            layout.setVisibility(View.GONE);
+        }
         return view;
     }
 
@@ -91,9 +96,6 @@ public class AllSongFragment extends Fragment {
             }
         }
 
-//        if (!MainActivity.isVertical){
-//            layout.setVisibility(View.GONE);
-//        }
     }
 
 
@@ -124,6 +126,7 @@ public class AllSongFragment extends Fragment {
         mSongs.get(position).setPlay(true);
         txtTitle.setText(mSongs.get(position).getTitle());
         txtAuthor.setText(mSongs.get(position).getAuthor());
+        cerrentSong=mSongs.get(position);
         adapter.notifyDataSetChanged();
     }
 
@@ -132,16 +135,17 @@ public class AllSongFragment extends Fragment {
     }
 
     public interface ShowMeDiaPlayListener{
-        void show();
+        void show(Song song);
     }
 
     public void onPrevious(){
         mSongs.get(index).setPlay(false);
         if (index==0){
-            index=mSongs.size();
+            index=mSongs.size()-1;
         }
         else index--;
         mSongs.get(index).setPlay(true);
+        cerrentSong= mSongs.get(index);
         adapter.notifyDataSetChanged();
     }
 
@@ -160,6 +164,7 @@ public class AllSongFragment extends Fragment {
         }
         else index++;
         mSongs.get(index).setPlay(true);
+        cerrentSong= mSongs.get(index);
         adapter.notifyDataSetChanged();
     }
 

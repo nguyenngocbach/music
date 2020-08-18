@@ -1,7 +1,9 @@
 package com.bkav.appmusic;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -19,6 +21,7 @@ import com.bkav.appmusic.fragment.MediaPlaybackFragment;
 import com.bkav.appmusic.fragment.ToolbarFragment;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
+import com.bkav.appmusic.until.Coast;
 
 public class  MainActivity extends AppCompatActivity  implements  SongListener , MediaPlaybackFragment.MediaPlayFragmentListenner, AllSongFragment.ShowMeDiaPlayListener {
 //    public static int INDEX=-1;
@@ -31,7 +34,12 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 //    private TextView txtTitle, txtAuthor;
 //    private LinearLayout layout;
     private FragmentManager fragmentManager;
-    private boolean isVertical= false;
+    public boolean isVertical= false;
+    public FragmentTransaction fplay;
+
+    public boolean isIsVertical() {
+        return isVertical;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,24 +53,21 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
         if(findViewById(R.id.vertical_Screen) != null )
             isVertical=true;
 
-        if(isVertical) {
-
+        if(findViewById(R.id.vertical_Screen) != null) {
             fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.add(R.id.allSongFragment, new AllSongFragment());
+            ft.replace(R.id.allSongFragment, new AllSongFragment());
             ft.commit();
-
         }
 
         else{
-
             fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.add(R.id.allSongFragment, new AllSongFragment());
+            ft.replace(R.id.allSongFragment, new AllSongFragment());
             ft.commit();
 
-            FragmentTransaction fplay = fragmentManager.beginTransaction();
-            fplay.add(R.id.musicPlayer, new MediaPlaybackFragment());
+            fplay = fragmentManager.beginTransaction();
+            fplay.replace(R.id.musicPlayer, new MediaPlaybackFragment());
             fplay.commit();
         }
 
@@ -114,8 +119,8 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     @Override
     public void onLike() {
         // todo songthing
-        AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
-        ft.onLike();
+//        AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+//        ft.onLike();
 
     }
 
@@ -154,6 +159,8 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 
     }
 
+
+
     @Override
     public void selectMusic(Song song, int position) {
 //        txtTitle.setText(song.getTitle());
@@ -169,16 +176,33 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     }
 
     @Override
-    public void show() {
+    public void show(Song song) {
+
+        Fragment fragment;
+        if (isVertical) fragment= MediaPlaybackFragment.getINSTANCE(song);
+
+        else fragment=new MediaPlaybackFragment();
+
         FragmentTransaction fplay = fragmentManager.beginTransaction();
-        fplay.add(R.id.allSongFragment, new MediaPlaybackFragment());
+        fplay.add(R.id.musicPlayer,fragment);
         fplay.addToBackStack(null);
+        fplay.commit();
+    }
+
+    public void onRemoveFragmetMusic(){
+        FragmentTransaction fplay = fragmentManager.beginTransaction();
+        fplay.replace(R.id.musicPlayer, new MediaPlaybackFragment());
         fplay.commit();
     }
 
     @Override
     public void onBackPressed() {
-
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        super.onSaveInstanceState(outState);
     }
 }
