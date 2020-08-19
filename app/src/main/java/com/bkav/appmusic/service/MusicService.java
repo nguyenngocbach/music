@@ -8,11 +8,12 @@ import androidx.annotation.Nullable;
 
 public class MusicService extends Service {
 
+    private MusicManager musicManager;
+
+
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-
-        return START_STICKY;
+    public void onCreate() {
+        super.onCreate();
     }
 
     @Nullable
@@ -20,4 +21,19 @@ public class MusicService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // đã chạy MusicManager trong service nhé.
+        musicManager= new MusicManager(this);
+
+
+        return START_STICKY;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
+    }
+
 }

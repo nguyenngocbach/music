@@ -33,7 +33,22 @@ public class MusicManager {
         }
     }
 
-    public
+    public void onPrevious(){
+        if (currentSong==0){
+            currentSong=mSongs.size()-1;
+        }
+        else currentSong--;
+        mPlayer.reset();
+        onPlay();;
+    }
+    public void onNext(){
+        if (currentSong==(mSongs.size()-1)){
+            currentSong=0;
+        }
+        else currentSong++;
+        mPlayer.reset();
+        onPlay();
+    }
 
 
     public int getCurrentSong() {
