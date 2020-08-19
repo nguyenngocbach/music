@@ -76,7 +76,7 @@ public class MediaPlaybackFragment extends Fragment implements View.OnClickListe
         seekBar= view.findViewById(R.id.seebar_ok);
         listenner();
 
-        if (mainActivity.isVertical){
+        if (mainActivity.isVertical && getArguments()!=null){
 
             setTitle(getArguments());
         }
@@ -146,10 +146,10 @@ public class MediaPlaybackFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onDestroy() {
-        if (!mainActivity.isVertical) {
-            MediaPlaybackFragment mediaPlaybackFragment= (MediaPlaybackFragment) getChildFragmentManager().findFragmentById(R.id.musicPlayer);
-           if (mediaPlaybackFragment.isRemoving()) mainActivity.onRemoveFragmetMusic();
-        }
+//        if (!mainActivity.isVertical) {
+//            MediaPlaybackFragment mediaPlaybackFragment= (MediaPlaybackFragment) getChildFragmentManager().findFragmentById(R.id.musicPlayer);
+//           if (mediaPlaybackFragment.isRemoving()) mainActivity.onRemoveFragmetMusic();
+//        }
 
         super.onDestroy();
     }

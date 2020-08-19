@@ -2,17 +2,34 @@ package com.bkav.appmusic.model;
 
 import java.io.Serializable;
 
-public class Song implements Serializable {
+public class Song implements Serializable  {
+    private String path;
     private String title;
     private String author;
-    private long timeTotal;
+    private String duration;
     private boolean isPlay=false;
 
-    public Song(String title, String author, long timeTotal, boolean isPlay) {
+    public Song(String path, String title, String author, String duration) {
+        this.path = path;
         this.title = title;
         this.author = author;
-        this.timeTotal = timeTotal;
-        this.isPlay = isPlay;
+        this.duration = duration;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public boolean isPlay() {
@@ -39,11 +56,4 @@ public class Song implements Serializable {
         this.author = author;
     }
 
-    public long getTimeTotal() {
-        return timeTotal;
-    }
-
-    public void setTimeTotal(long timeTotal) {
-        this.timeTotal = timeTotal;
-    }
 }

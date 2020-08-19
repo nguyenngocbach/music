@@ -24,6 +24,8 @@ import com.bkav.appmusic.model.Song;
 import com.bkav.appmusic.until.Coast;
 
 public class  MainActivity extends AppCompatActivity  implements  SongListener , MediaPlaybackFragment.MediaPlayFragmentListenner, AllSongFragment.ShowMeDiaPlayListener {
+    private static final String KEY_SONG = "com.bkav.appmusic.MainActivity.Song";
+    private static final String KEY_SONG_POSITION ="com.bkav.appmusic.MainActivity.Position" ;
 //    public static int INDEX=-1;
 //    public String PREFERENCES="com.bkav.appmusic";
 //    public static SharedPreferences sharedPreferences;
@@ -36,7 +38,10 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     private FragmentManager fragmentManager;
     public boolean isVertical= false;
     public FragmentTransaction fplay;
+    private Song song=null;
+    private int position=-1;
 
+    private boolean check=false;
     public boolean isIsVertical() {
         return isVertical;
     }
@@ -49,6 +54,22 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 //        if (savedInstanceState!=null){
 //            //INDEX = sharedPreferences.getInt("count", -1);
 //        }
+        if (savedInstanceState!= null){
+            check=true;
+            song= (Song) savedInstanceState.getSerializable(KEY_SONG);
+            position = savedInstanceState.getInt(KEY_SONG_POSITION);
+            Log.d("bach","savedInstanceState");
+            Log.d("bach",song.getTitle()+"");
+            Log.d("bach",song.getAuthor());
+//            Log.d("bach",position+"");
+//            AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+//            mf.setPosition(position);
+//
+//            if (!isVertical){
+//                MediaPlaybackFragment mPlay= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
+//                mPlay.setDataMusic(song);
+//            }
+        }
 
         if(findViewById(R.id.vertical_Screen) != null )
             isVertical=true;
@@ -68,10 +89,25 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 
             fplay = fragmentManager.beginTransaction();
             fplay.replace(R.id.musicPlayer, new MediaPlaybackFragment());
+            fplay.addToBackStack(null);
             fplay.commit();
         }
 
         //init();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (check==true){
+            AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+            mf.setPosition(position);
+
+            if (!isVertical){
+                MediaPlaybackFragment mPlay= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
+                mPlay.setDataMusic(song);
+            }
+        }
     }
 
     private void init() {
@@ -128,6 +164,10 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     public void onPrevious() {
         AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
         ft.onPrevious();
+
+        MediaPlaybackFragment mPlay= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
+        song= ft.getCerrentSong();
+        mPlay.setDataMusic(song);
     }
 
     @Override
@@ -140,6 +180,11 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     public void onNext() {
         AllSongFragment ft= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
         ft.onNext();
+
+        MediaPlaybackFragment mPlay= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
+        song= ft.getCerrentSong();
+        mPlay.setDataMusic(song);
+
     }
 
     @Override
@@ -165,6 +210,8 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     public void selectMusic(Song song, int position) {
 //        txtTitle.setText(song.getTitle());
 //        txtAuthor.setText(song.getAuthor());
+        this.song=song;
+        this.position= position;
         AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
         mf.setPosition(position);
 
@@ -176,8 +223,9 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     }
 
     @Override
-    public void show(Song song) {
+    public void show(Song s) {
 
+        song= s;
         Fragment fragment;
         if (isVertical) fragment= MediaPlaybackFragment.getINSTANCE(song);
 
@@ -202,7 +250,11 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
+        if (song!=null){
+            outState.putSerializable(KEY_SONG,song);
+            outState.putInt(KEY_SONG_POSITION,position);
+            Log.d("bach","outState");
+        }
         super.onSaveInstanceState(outState);
     }
 }

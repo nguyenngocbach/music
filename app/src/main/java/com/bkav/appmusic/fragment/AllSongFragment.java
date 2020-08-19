@@ -86,6 +86,8 @@ public class AllSongFragment extends Fragment {
         return view;
     }
 
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -97,6 +99,8 @@ public class AllSongFragment extends Fragment {
         }
 
     }
+
+
 
 
     private void addData() {
