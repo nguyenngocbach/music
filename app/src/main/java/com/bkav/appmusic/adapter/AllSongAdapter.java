@@ -72,7 +72,7 @@ public class AllSongAdapter extends RecyclerView.Adapter<AllSongAdapter.ViewHold
 //                    }
 //                    mSongs.get(position).setPlay(false);
 //                }
-                listener.selectMusic(mSongs.get(position), position);
+                listener.selectMusic(position);
                 AllSongFragment.index=position;
                 //MainActivity.saveInDex(position);
                 //notifyDataSetChanged();

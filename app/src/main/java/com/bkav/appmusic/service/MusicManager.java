@@ -59,10 +59,18 @@ public class MusicManager {
         this.currentSong = currentSong;
     }
 
-    public List<Song> getSong(){
-        return mSongs;
+    public void selectMusic(int position){
+        if (mPlayer.isPlaying()){
+            mPlayer.pause();
+        }
+        mPlayer.reset();
+        currentSong= position;
+        onPlay();
     }
 
+    public void setSeek(int position){
+        mPlayer.seekTo(position);
+    }
 
     private void getAllSong() {
         String[] allColoumSong= new String[]{
@@ -88,4 +96,11 @@ public class MusicManager {
         cursor.close();
     }
 
+    public List<Song> getmSongs() {
+        return mSongs;
+    }
+
+    public Song getSinpleSong(int position){
+        return mSongs.get(position);
+    }
 }

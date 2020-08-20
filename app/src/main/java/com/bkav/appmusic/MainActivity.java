@@ -7,8 +7,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -21,20 +26,13 @@ import com.bkav.appmusic.fragment.MediaPlaybackFragment;
 import com.bkav.appmusic.fragment.ToolbarFragment;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
+import com.bkav.appmusic.service.MusicService;
 import com.bkav.appmusic.until.Coast;
 
 public class  MainActivity extends AppCompatActivity  implements  SongListener , MediaPlaybackFragment.MediaPlayFragmentListenner, AllSongFragment.ShowMeDiaPlayListener {
     private static final String KEY_SONG = "com.bkav.appmusic.MainActivity.Song";
     private static final String KEY_SONG_POSITION ="com.bkav.appmusic.MainActivity.Position" ;
-//    public static int INDEX=-1;
-//    public String PREFERENCES="com.bkav.appmusic";
-//    public static SharedPreferences sharedPreferences;
 
-//    private Toolbar toolbar;
-//    private FrameLayout frameLayout;
-//    private ImageView imgPlay, imgImage;
-//    private TextView txtTitle, txtAuthor;
-//    private LinearLayout layout;
     private FragmentManager fragmentManager;
     public boolean isVertical= false;
     public FragmentTransaction fplay;
@@ -42,6 +40,23 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     private int position=-1;
 
     private boolean check=false;
+    private boolean isConnection=false;
+    private MusicService musicService;
+
+    private ServiceConnection mConnection= new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+           MusicService.LocalMusic binder= (MusicService.LocalMusic) iBinder;
+           isConnection=true;
+           musicService= binder.getInstanceService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            isConnection=false;
+        }
+    };
+
     public boolean isIsVertical() {
         return isVertical;
     }
@@ -50,10 +65,7 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //sharedPreferences= getSharedPreferences(PREFERENCES,MODE_PRIVATE);
-//        if (savedInstanceState!=null){
-//            //INDEX = sharedPreferences.getInt("count", -1);
-//        }
+
         if (savedInstanceState!= null){
             check=true;
             song= (Song) savedInstanceState.getSerializable(KEY_SONG);
@@ -61,14 +73,7 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
             Log.d("bach","savedInstanceState");
             Log.d("bach",song.getTitle()+"");
             Log.d("bach",song.getAuthor());
-//            Log.d("bach",position+"");
-//            AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
-//            mf.setPosition(position);
-//
-//            if (!isVertical){
-//                MediaPlaybackFragment mPlay= (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
-//                mPlay.setDataMusic(song);
-//            }
+
         }
 
         if(findViewById(R.id.vertical_Screen) != null )
@@ -93,14 +98,19 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
             fplay.commit();
         }
 
-        //init();
+        Intent intent= new Intent(this, MusicService.class);
+        startService(intent);
+        bindService(intent,mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+        if (isConnection){
+            mf.addData(musicService.getMusicManager().getmSongs());
+        }
         if (check==true){
-            AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
             mf.setPosition(position);
 
             if (!isVertical){
@@ -207,10 +217,10 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
 
 
     @Override
-    public void selectMusic(Song song, int position) {
+    public void selectMusic(int position) {
 //        txtTitle.setText(song.getTitle());
 //        txtAuthor.setText(song.getAuthor());
-        this.song=song;
+        this.song=musicService.getMusicManager().getSinpleSong(position);
         this.position= position;
         AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
         mf.setPosition(position);
@@ -223,9 +233,8 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
     }
 
     @Override
-    public void show(Song s) {
+    public void show() {
 
-        song= s;
         Fragment fragment;
         if (isVertical) fragment= MediaPlaybackFragment.getINSTANCE(song);
 

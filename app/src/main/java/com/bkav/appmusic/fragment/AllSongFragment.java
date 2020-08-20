@@ -55,9 +55,9 @@ public class AllSongFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.all_song_fragment,container,false);
         recyclerView= view.findViewById(R.id.recycler_song);
+        mSongs= new ArrayList<>();
         LinearLayoutManager manager= new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
-        addData();
         adapter= new AllSongAdapter(getContext(),mSongs, (MainActivity) getActivity());
         recyclerView.setAdapter(adapter);
 
@@ -76,7 +76,7 @@ public class AllSongFragment extends Fragment {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.show(cerrentSong);
+                listener.show();
             }
         });
 
@@ -103,19 +103,13 @@ public class AllSongFragment extends Fragment {
 
 
 
-    private void addData() {
-        mSongs=  new ArrayList<>();
-        mSongs.add(new Song("Hello","abcdef",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,true));
-        mSongs.add(new Song("Yêu Em","Sơn tùng - MTP",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
-        mSongs.add(new Song("Nời này có anh","Sơn tùng - MTP",1111,false));
-
+    public void addData(List<Song> mSongs) {
+        if (this.mSongs!=null){
+            this.mSongs.clear();
+            this.mSongs= new ArrayList<>();
+            this.mSongs.addAll(mSongs);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     public List<Song> getAllSong(){
@@ -138,8 +132,9 @@ public class AllSongFragment extends Fragment {
         return cerrentSong;
     }
 
+    // interface
     public interface ShowMeDiaPlayListener{
-        void show(Song song);
+        void show();
     }
 
     public void onPrevious(){

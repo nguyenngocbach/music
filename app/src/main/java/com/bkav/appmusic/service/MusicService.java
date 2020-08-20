@@ -2,6 +2,7 @@ package com.bkav.appmusic.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
@@ -10,6 +11,7 @@ public class MusicService extends Service {
 
     private MusicManager musicManager;
 
+    private IBinder iBinder = new LocalMusic();
 
     @Override
     public void onCreate() {
@@ -19,7 +21,7 @@ public class MusicService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return iBinder;
     }
 
     @Override
@@ -36,4 +38,13 @@ public class MusicService extends Service {
         return super.onUnbind(intent);
     }
 
+    public class LocalMusic extends Binder {
+        public MusicService getInstanceService(){
+            return MusicService.this;
+        }
+    }
+
+    public MusicManager getMusicManager() {
+        return musicManager;
+    }
 }
