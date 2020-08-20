@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.bkav.appmusic.model.Song;
 
@@ -20,6 +21,7 @@ public class MusicManager {
     public MusicManager(Context context){
         mContext=context;
         getAllSong();
+        Log.d("bachdz",mSongs.size()+"");
         mPlayer= new MediaPlayer();
     }
 
@@ -84,13 +86,18 @@ public class MusicManager {
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,allColoumSong,null,null,null,null);
         cursor.moveToFirst();
         mSongs= new ArrayList<>();
-        while (cursor!=null){
-            String path= cursor.getColumnName(0);
-            String title= cursor.getColumnName(1);
-            String author= cursor.getColumnName(2);
+        while (cursor.isAfterLast()==false){
+            String path= cursor.getString(0);
+            String title= cursor.getString(1);
+            String author= cursor.getString(2);
             String duration= cursor.getColumnName(3);
+            Log.d("bachdz",path);
+            Log.d("bachdz",title);
+            Log.d("bachdz",author);
+            Log.d("bachdz",duration);
             Song song= new Song(path,title,author,duration);
             mSongs.add(song);
+            Log.d("bachdz",mSongs.size()+"");
             cursor.moveToNext();
         }
         cursor.close();

@@ -108,6 +108,7 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
         super.onStart();
         AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
         if (isConnection){
+            Log.d("bachdz","connection");
             mf.addData(musicService.getMusicManager().getmSongs());
         }
         if (check==true){
@@ -120,45 +121,6 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
         }
     }
 
-    private void init() {
-       /* toolbar= findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        frameLayout= findViewById(R.id.AllSongsFragment);
-        imgImage=findViewById(R.id.avatar);
-        imgPlay=findViewById(R.id.icon_play_music);
-        txtTitle= findViewById(R.id.nameMusic);
-        txtAuthor= findViewById(R.id.nameAirsts);
-*/
-//        AllSongFragment songFragment= new AllSongFragment();
-//        manager= getSupportFragmentManager();
-//        final FragmentTransaction ft= manager.beginTransaction();
-//        ft.add(R.id.AllSongsFragment,songFragment);
-//        ft.commit();
-
-//        layout= findViewById(R.id.linearLayout);
-//
-//        layout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FragmentTransaction ft= manager.beginTransaction();
-//                ft.add(R.id.frame_main,new MediaPlaybackFragment());
-//                ft.addToBackStack(null);
-//                ft.commit();
-//            }
-//        });
-
-    }
-
-//    public static void saveInDex(int index){
-//        SharedPreferences.Editor editor= sharedPreferences.edit();
-//        editor.putInt("NUMBERINDEX",index);
-//        editor.apply();
-//    }
-//
-//    public static int getINDEX(){
-//        INDEX = sharedPreferences.getInt("NUMBERINDEX", -1);
-//        return INDEX;
-//    }
 
 
 
