@@ -76,34 +76,46 @@ public class MusicManager {
 
     private void getAllSong() {
         String[] allColoumSong= new String[]{
-                MediaStore.Audio.AudioColumns.DATA,
-                MediaStore.Audio.AudioColumns.DISPLAY_NAME,
-                MediaStore.Audio.AudioColumns.ARTIST,
-                MediaStore.Audio.AudioColumns.DURATION
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION
         };
 
-        Cursor cursor= mContext.getContentResolver()
-                .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,allColoumSong,null,null,null,null);
+        Log.d("bachdz","getAllSong" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        Cursor cursor= mContext.getContentResolver().
+                query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, allColoumSong, null, null, null, null);
         cursor.moveToFirst();
         mSongs= new ArrayList<>();
-        while (cursor.isAfterLast()==false){
-            String path= cursor.getString(0);
-            String title= cursor.getString(1);
-            String author= cursor.getString(2);
-            String duration= cursor.getColumnName(3);
-            Log.d("bachdz",path);
-            Log.d("bachdz",title);
-            Log.d("bachdz",author);
-            Log.d("bachdz",duration);
-            Song song= new Song(path,title,author,duration);
-            mSongs.add(song);
-            Log.d("bachdz",mSongs.size()+"");
-            cursor.moveToNext();
+        if (cursor!=null){
+            while (!cursor.isAfterLast()){
+
+                int _ID = cursor.getColumnIndex(allColoumSong[0]);
+                int DATA = cursor.getColumnIndex(allColoumSong[1]);
+                int ARTIST = cursor.getColumnIndex(allColoumSong[2]);
+                int TITLE = cursor.getColumnIndex(allColoumSong[3]);
+                int DISPLAY_NAME = cursor.getColumnIndex(allColoumSong[4]);
+                int DURATION = cursor.getColumnIndex(allColoumSong[5]);
+
+
+                String id= cursor.getString(_ID);
+                String data= cursor.getString(DATA);
+                String author= cursor.getString(ARTIST);
+                String title= cursor.getString(TITLE);
+                String displayName= cursor.getString(DISPLAY_NAME);
+                String duration= cursor.getString(DURATION);
+                mSongs.add(new Song(id,data,author,title,displayName,duration));
+                cursor.moveToNext();
+            }
+            cursor.close();
         }
-        cursor.close();
+
     }
 
     public List<Song> getmSongs() {
+        mSongs.get(0).setPlay(true);
         return mSongs;
     }
 

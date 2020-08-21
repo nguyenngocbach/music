@@ -1,8 +1,15 @@
 package com.bkav.appmusic.fragment;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +28,7 @@ import com.bkav.appmusic.R;
 import com.bkav.appmusic.adapter.AllSongAdapter;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
+import com.bkav.appmusic.service.MusicService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +36,7 @@ import java.util.List;
 public class AllSongFragment extends Fragment {
     private SharedPreferences preferences;
     private RecyclerView recyclerView;
-    private List<Song> mSongs;
+    private List<Song> mSongs= new ArrayList<>();
     private AllSongAdapter adapter;
 
     private ImageView imgPlay, imgImage;
@@ -40,6 +48,26 @@ public class AllSongFragment extends Fragment {
     public static int index=0;
 
     MainActivity mainActivity;
+    MusicService musicService;
+//    private ServiceConnection mConnecttion= new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+//            MusicService.LocalMusic binder= (MusicService.LocalMusic) iBinder;
+//            musicService= binder.getInstanceService();
+//            if (mSongs!=null){
+//                mSongs.clear();
+//                mSongs= new ArrayList<>();
+//            }
+//            mSongs.addAll(musicService.getMusicManager().getmSongs());
+//            adapter.notifyDataSetChanged();
+//            Log.d("bachdz","Successful");
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName componentName) {
+//
+//        }
+//    };
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -55,19 +83,15 @@ public class AllSongFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.all_song_fragment,container,false);
         recyclerView= view.findViewById(R.id.recycler_song);
-        mSongs= new ArrayList<>();
         LinearLayoutManager manager= new LinearLayoutManager(getContext());
+
+        manager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(manager);
+       // mSongs.add(new Song("111","11111111","11111111","11111","11111111","11111"));
         adapter= new AllSongAdapter(getContext(),mSongs, (MainActivity) getActivity());
         recyclerView.setAdapter(adapter);
 
-        //
-//        for(int i=0;i<mSongs.size();i++){
-//            if(mSongs.get(i).isPlay()){
-//                cerrentSong=mSongs.get(i);
-//            }
-//        }
-
+        Log.d("bachdz","onCreateView "+mSongs.size() );
         imgImage=view.findViewById(R.id.avatar);
         imgPlay=view.findViewById(R.id.icon_play_music);
         txtTitle= view.findViewById(R.id.nameMusic);
@@ -98,17 +122,19 @@ public class AllSongFragment extends Fragment {
             }
         }
 
+        adapter.notifyDataSetChanged();
+//        Intent intent= new Intent(getContext(), Service.class);
+//        getActivity().bindService(intent, mConnecttion, Context.BIND_AUTO_CREATE);
+
     }
 
 
 
 
-    public void addData(List<Song> mSongs) {
-        if (this.mSongs!=null){
-            this.mSongs.clear();
-            this.mSongs= new ArrayList<>();
-            this.mSongs.addAll(mSongs);
-        }
+    public void addData(List<Song> s) {
+
+        mSongs.addAll(s);
+        Log.d("bachdz","All Song "+mSongs.size() );
         adapter.notifyDataSetChanged();
     }
 

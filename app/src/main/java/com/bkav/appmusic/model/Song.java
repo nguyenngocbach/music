@@ -3,17 +3,37 @@ package com.bkav.appmusic.model;
 import java.io.Serializable;
 
 public class Song implements Serializable  {
+    private String id;
     private String path;
-    private String title;
     private String author;
+    private String title;
+    private String display_Name;
     private String duration;
     private boolean isPlay=false;
 
-    public Song(String path, String title, String author, String duration) {
+    public Song(String id, String path, String author, String title, String display_Name, String duration) {
+        this.id = id;
         this.path = path;
-        this.title = title;
         this.author = author;
+        this.title = title;
+        this.display_Name = display_Name;
         this.duration = duration;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDisplay_Name() {
+        return display_Name;
+    }
+
+    public void setDisplay_Name(String display_Name) {
+        this.display_Name = display_Name;
     }
 
     public String getPath() {

@@ -3,15 +3,18 @@ package com.bkav.appmusic;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -20,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bkav.appmusic.fragment.AllSongFragment;
 import com.bkav.appmusic.fragment.MediaPlaybackFragment;
@@ -32,6 +36,7 @@ import com.bkav.appmusic.until.Coast;
 public class  MainActivity extends AppCompatActivity  implements  SongListener , MediaPlaybackFragment.MediaPlayFragmentListenner, AllSongFragment.ShowMeDiaPlayListener {
     private static final String KEY_SONG = "com.bkav.appmusic.MainActivity.Song";
     private static final String KEY_SONG_POSITION ="com.bkav.appmusic.MainActivity.Position" ;
+    private static final int MY_PERMISSION_REQUEST = 123;
 
     private FragmentManager fragmentManager;
     public boolean isVertical= false;
@@ -49,11 +54,16 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
            MusicService.LocalMusic binder= (MusicService.LocalMusic) iBinder;
            isConnection=true;
            musicService= binder.getInstanceService();
+           Log.d("bachdz","Successful");
+            AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+            mf.addData(musicService.getMusicManager().getmSongs());
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             isConnection=false;
+            musicService=null;
+            Log.d("bachdz","faill");
         }
     };
 
@@ -101,16 +111,19 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
         Intent intent= new Intent(this, MusicService.class);
         startService(intent);
         bindService(intent,mConnection, Context.BIND_AUTO_CREATE);
+
+        // ????????????????????????
+//        if (musicService!=null){
+//            AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
+//            Log.d("bachdz","All Song");
+//            mf.addData(musicService.getMusicManager().getmSongs());
+//        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         AllSongFragment mf= (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
-        if (isConnection){
-            Log.d("bachdz","connection");
-            mf.addData(musicService.getMusicManager().getmSongs());
-        }
         if (check==true){
             mf.setPosition(position);
 
@@ -227,5 +240,24 @@ public class  MainActivity extends AppCompatActivity  implements  SongListener ,
             Log.d("bach","outState");
         }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_REQUEST: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+
+
+                    }
+                } else {
+                    Toast.makeText(this, "No permission granted", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+            }
+        }
     }
 }

@@ -29,8 +29,7 @@ public class MusicService extends Service {
         // đã chạy MusicManager trong service nhé.
         musicManager= new MusicManager(this);
 
-
-        return START_STICKY;
+         return START_STICKY;
     }
 
     @Override
