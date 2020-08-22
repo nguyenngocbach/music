@@ -21,7 +21,7 @@ public class MusicManager {
     public MusicManager(Context context){
         mContext=context;
         getAllSong();
-        Log.d("bachdz",mSongs.size()+"");
+        //Log.d("bachdz",mSongs.size()+"");
         mPlayer= new MediaPlayer();
     }
 
@@ -33,6 +33,11 @@ public class MusicManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onResetMusic(){
+        mPlayer.pause();
+        mPlayer.reset();
     }
 
     public void onPrevious(){
@@ -55,10 +60,12 @@ public class MusicManager {
 
     public int getCurrentSong() {
         return currentSong;
+
     }
 
     public void setCurrentSong(int currentSong) {
         this.currentSong = currentSong;
+        mSongs.get(currentSong).setPlay(true);
     }
 
     public void selectMusic(int position){
@@ -68,6 +75,21 @@ public class MusicManager {
         mPlayer.reset();
         currentSong= position;
         onPlay();
+    }
+
+    public boolean isMusicPlaying(){
+        if (mPlayer.isPlaying()) return true;
+        else return false;
+    }
+
+
+
+    public void onPauseMusic(){
+        mPlayer.pause();
+    }
+
+    public void onResumeMusic(){
+        mPlayer.start();
     }
 
     public void setSeek(int position){
@@ -84,7 +106,7 @@ public class MusicManager {
                 MediaStore.Audio.Media.DURATION
         };
 
-        Log.d("bachdz","getAllSong" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        //Log.d("bachdz","getAllSong" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         Cursor cursor= mContext.getContentResolver().
                 query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, allColoumSong, null, null, null, null);
         cursor.moveToFirst();
@@ -115,7 +137,6 @@ public class MusicManager {
     }
 
     public List<Song> getmSongs() {
-        mSongs.get(0).setPlay(true);
         return mSongs;
     }
 

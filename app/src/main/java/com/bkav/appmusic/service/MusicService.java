@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -16,6 +17,7 @@ public class MusicService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d("bachdz","onCreate");
     }
 
     @Nullable
@@ -32,6 +34,7 @@ public class MusicService extends Service {
          return START_STICKY;
     }
 
+
     @Override
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
@@ -46,4 +49,11 @@ public class MusicService extends Service {
     public MusicManager getMusicManager() {
         return musicManager;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("bachdz","onDestroy");
+    }
+
 }

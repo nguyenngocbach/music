@@ -28,6 +28,7 @@ import com.bkav.appmusic.R;
 import com.bkav.appmusic.adapter.AllSongAdapter;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
+import com.bkav.appmusic.service.MusicManager;
 import com.bkav.appmusic.service.MusicService;
 
 import java.util.ArrayList;
@@ -48,26 +49,8 @@ public class AllSongFragment extends Fragment {
     public static int index=0;
 
     MainActivity mainActivity;
-    MusicService musicService;
-//    private ServiceConnection mConnecttion= new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-//            MusicService.LocalMusic binder= (MusicService.LocalMusic) iBinder;
-//            musicService= binder.getInstanceService();
-//            if (mSongs!=null){
-//                mSongs.clear();
-//                mSongs= new ArrayList<>();
-//            }
-//            mSongs.addAll(musicService.getMusicManager().getmSongs());
-//            adapter.notifyDataSetChanged();
-//            Log.d("bachdz","Successful");
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName componentName) {
-//
-//        }
-//    };
+    MusicManager musicManager;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -83,11 +66,10 @@ public class AllSongFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.all_song_fragment,container,false);
         recyclerView= view.findViewById(R.id.recycler_song);
-        LinearLayoutManager manager= new LinearLayoutManager(getContext());
+        final LinearLayoutManager manager= new LinearLayoutManager(getContext());
 
         manager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(manager);
-       // mSongs.add(new Song("111","11111111","11111111","11111","11111111","11111"));
         adapter= new AllSongAdapter(getContext(),mSongs, (MainActivity) getActivity());
         recyclerView.setAdapter(adapter);
 
@@ -107,8 +89,24 @@ public class AllSongFragment extends Fragment {
         if (!mainActivity.isVertical){
             layout.setVisibility(View.GONE);
         }
+
+        imgPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Ngoc", musicManager.isMusicPlaying()+"");
+                if (musicManager.isMusicPlaying()){
+                    musicManager.onPauseMusic();
+                    imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow);
+                }
+                else {
+                    musicManager.onResumeMusic();
+                    imgPlay.setImageResource(R.drawable.ic_pause_24);
+                }
+            }
+        });
         return view;
     }
+
 
 
 
@@ -123,8 +121,6 @@ public class AllSongFragment extends Fragment {
         }
 
         adapter.notifyDataSetChanged();
-//        Intent intent= new Intent(getContext(), Service.class);
-//        getActivity().bindService(intent, mConnecttion, Context.BIND_AUTO_CREATE);
 
     }
 
@@ -154,6 +150,11 @@ public class AllSongFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    public void isPlayMusic(boolean s){
+        if (s) imgPlay.setImageResource(R.drawable.ic_pause_24);
+        else imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow);
+    }
+
     public Song getCerrentSong() {
         return cerrentSong;
     }
@@ -170,6 +171,7 @@ public class AllSongFragment extends Fragment {
         }
         else index--;
         mSongs.get(index).setPlay(true);
+        musicManager.setCurrentSong(index);
         cerrentSong= mSongs.get(index);
         adapter.notifyDataSetChanged();
     }
@@ -184,16 +186,22 @@ public class AllSongFragment extends Fragment {
 
     public void onNext(){
         mSongs.get(index).setPlay(false);
-        if (index==mSongs.size()){
+        if (index==(mSongs.size()-1) ){
             index=0;
         }
         else index++;
         mSongs.get(index).setPlay(true);
+        musicManager.setCurrentSong(index);
         cerrentSong= mSongs.get(index);
         adapter.notifyDataSetChanged();
+
     }
 
     public void onDisLike(){
         //todo something
+    }
+
+    public void setMusicManager(MusicManager musicManager) {
+        this.musicManager = musicManager;
     }
 }

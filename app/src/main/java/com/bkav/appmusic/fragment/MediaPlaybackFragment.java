@@ -76,6 +76,13 @@ public class MediaPlaybackFragment extends Fragment implements View.OnClickListe
         seekBar= view.findViewById(R.id.seebar_ok);
         listenner();
 
+        imgMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //
+            }
+        });
+
         if (mainActivity.isVertical && getArguments()!=null){
 
             setTitle(getArguments());
