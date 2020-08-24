@@ -95,7 +95,7 @@ public class AllSongFragment extends Fragment {
             public void onClick(View view) {
                 Log.d("Ngoc", musicManager.isMusicPlaying()+"");
                 if (musicManager.isMusicPlaying()){
-                    musicManager.onPauseMusic();
+                    musicManager.onStop();
                     imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow);
                 }
                 else {
@@ -173,6 +173,7 @@ public class AllSongFragment extends Fragment {
         mSongs.get(index).setPlay(true);
         musicManager.setCurrentSong(index);
         cerrentSong= mSongs.get(index);
+        setTile(cerrentSong);
         adapter.notifyDataSetChanged();
     }
 
@@ -193,12 +194,18 @@ public class AllSongFragment extends Fragment {
         mSongs.get(index).setPlay(true);
         musicManager.setCurrentSong(index);
         cerrentSong= mSongs.get(index);
+        setTile(cerrentSong);
         adapter.notifyDataSetChanged();
 
     }
 
     public void onDisLike(){
         //todo something
+    }
+
+    public void setTile(Song song){
+        txtAuthor.setText(song.getAuthor());
+        txtTitle.setText(song.getTitle());
     }
 
     public void setMusicManager(MusicManager musicManager) {

@@ -30,6 +30,7 @@ import com.bkav.appmusic.fragment.MediaPlaybackFragment;
 import com.bkav.appmusic.fragment.ToolbarFragment;
 import com.bkav.appmusic.listener.SongListener;
 import com.bkav.appmusic.model.Song;
+import com.bkav.appmusic.service.MusicManager;
 import com.bkav.appmusic.service.MusicService;
 import com.bkav.appmusic.until.Coast;
 
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
     private MusicService musicService;
     private List<Song> mSongs;
 
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
             mf.isPlayMusic(musicService.getMusicManager().isMusicPlaying());
             if (check){
                 mf.setPosition(position);
+            }
+            if (!isVertical){
+
             }
         }
 
@@ -87,10 +92,10 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState != null) {
+            Log.d("bachdz","savedInstanceState");
             check = true;
             song = (Song) savedInstanceState.getSerializable(KEY_SONG);
             position = savedInstanceState.getInt(KEY_SONG_POSITION);
-            Log.d("bach", "savedInstanceState");
             Log.d("bach", song.getTitle() + "");
             Log.d("bach", song.getAuthor());
             mSongs = (List<Song>) savedInstanceState.getSerializable(KEY_ALL_SONG);
@@ -164,6 +169,8 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
         AllSongFragment ft = (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
         ft.onPrevious();
 
+        musicService.getMusicManager().onPrevious();
+
         MediaPlaybackFragment mPlay = (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
         song = ft.getCerrentSong();
         mPlay.setDataMusic(song);
@@ -179,6 +186,8 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
     public void onNext() {
         AllSongFragment ft = (AllSongFragment) getSupportFragmentManager().findFragmentById(R.id.allSongFragment);
         ft.onNext();
+
+        musicService.getMusicManager().onNext();
 
         MediaPlaybackFragment mPlay = (MediaPlaybackFragment) getSupportFragmentManager().findFragmentById(R.id.musicPlayer);
         song = ft.getCerrentSong();
@@ -218,6 +227,8 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
         for (int i = 0; i < musicService.getMusicManager().getmSongs().size(); i++) {
             musicService.getMusicManager().getmSongs().get(i).setPlay(false);
         }
+        //musicService.getMusicManager().selectMusic(position);
+
         musicService.getMusicManager().setCurrentSong(position);
         if (musicService.getMusicManager().isMusicPlaying()){
             musicService.getMusicManager().onResetMusic();
@@ -244,12 +255,17 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
         fplay.add(R.id.musicPlayer, fragment);
         fplay.addToBackStack(null);
         fplay.commit();
+
     }
 
     public void onRemoveFragmetMusic() {
         FragmentTransaction fplay = fragmentManager.beginTransaction();
         fplay.replace(R.id.musicPlayer, new MediaPlaybackFragment());
         fplay.commit();
+    }
+
+    public MusicService getMusicService() {
+        return musicService;
     }
 
     @Override
@@ -260,10 +276,10 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
 
+        Log.d("bachdz", "outState");
         int position = getPositionCorrent();
         outState.putInt(KEY_SONG_POSITION, position);
         outState.putSerializable(KEY_SONG, musicService.getMusicManager().getmSongs().get(position));
-        Log.d("bach", "outState");
 
         if (isConnection) {
             outState.putSerializable(KEY_ALL_SONG, (Serializable) musicService.getMusicManager().getmSongs());
@@ -277,6 +293,8 @@ public class MainActivity extends AppCompatActivity implements SongListener, Med
         }
         return -1;
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

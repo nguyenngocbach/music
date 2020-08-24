@@ -17,6 +17,11 @@ public class MusicManager {
     private MediaPlayer mPlayer;
     private int currentSong=0;
 
+    private int PAUSE=1;
+    private int RESUMNE=2;
+    private int STOP=3;
+    private int status=0;
+
     private Context mContext;
     public MusicManager(Context context){
         mContext=context;
@@ -25,7 +30,13 @@ public class MusicManager {
         mPlayer= new MediaPlayer();
     }
 
+
+
     public void onPlay(){
+        if (status==STOP){
+            mPlayer.reset();
+            status=0;
+        }
         try {
             mPlayer.setDataSource(mSongs.get(currentSong).getPath());
             mPlayer.prepare();
@@ -40,7 +51,12 @@ public class MusicManager {
         mPlayer.reset();
     }
 
+
+
     public void onPrevious(){
+        if (mPlayer.isPlaying()){
+            mPlayer.pause();
+        }
         if (currentSong==0){
             currentSong=mSongs.size()-1;
         }
@@ -49,6 +65,9 @@ public class MusicManager {
         onPlay();;
     }
     public void onNext(){
+        if (mPlayer.isPlaying()){
+            mPlayer.pause();
+        }
         if (currentSong==(mSongs.size()-1)){
             currentSong=0;
         }
@@ -90,6 +109,11 @@ public class MusicManager {
 
     public void onResumeMusic(){
         mPlayer.start();
+    }
+
+    public void onStop(){
+        mPlayer.pause();
+        status=STOP;
     }
 
     public void setSeek(int position){
@@ -142,5 +166,13 @@ public class MusicManager {
 
     public Song getSinpleSong(int position){
         return mSongs.get(position);
+    }
+
+    public Song getSongIsPlay(){
+        return mSongs.get(currentSong);
+    }
+
+    public int getTimeCurrents(){
+        return mPlayer.getCurrentPosition();
     }
 }
